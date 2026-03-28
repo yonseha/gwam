@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>괌 여행 체크리스트</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #f0ebe3;
+    color: #2d2d2d;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .header {
+    text-align: center;
+    padding: 40px 20px 30px;
+  }
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a5276;
+    letter-spacing: -1px;
+  }
+  .header .subtitle {
+    font-size: 0.95rem;
+    color: #7f8c8d;
+    margin-top: 8px;
+    font-weight: 300;
+  }
+  .header .members {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .member-tag {
+    background: white;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .member-tag.dad { border-left: 3px solid #3498db; }
+  .member-tag.mom { border-left: 3px solid #e91e63; }
+  .member-tag.baby { border-left: 3px solid #ff9800; }
+  .flight-info {
+    display: inline-block;
+    background: #1a5276;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-top: 14px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+  .progress-bar {
+    max-width: 700px;
+    margin: 20px auto;
+    background: #ddd;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1a5276, #2ecc71);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+  .progress-text {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin-top: 6px;
+    margin-bottom: 20px;
+  }
+  .container { max-width: 700px; margin: 0 auto; }
+  .section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: transform 0.2s;
+  }
+  .section:hover { transform: translateY(-2px); }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1a5276;
+  }
+  .section-title .icon { font-size: 1.3rem; }
+  .section-meta { display: flex; align-items: center; gap: 8px; }
+  .badge {
+    font-size: 0.65rem;
+    background: #e74c3c;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    animation: pulse 2s infinite;
+  }
+  .badge.done { background: #2ecc71; animation: none; }
+  .count-badge {
+    font-size: 0.65rem;
+    background: #ecf0f1;
+    color: #7f8c8d;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 400;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .item {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid #f5f5f5;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .item:last-child { border-bottom: none; }
+  .item .checkbox {
+    width: 22px; height: 22px; min-width: 22px;
+    border: 2px solid #bdc3c7;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+    transition: all 0.2s;
+    font-size: 0.75rem;
+    color: transparent;
+  }
+  .item.checked .checkbox {
+    background: #2ecc71;
+    border-color: #2ecc71;
+    color: white;
+  }
+  .item.checked .item-text {
+    color: #aaa;
+    text-decoration: line-through;
+  }
+  .item-content { flex: 1; }
+  .item-text {
+    font-size: 0.9rem;
+    font-weight: 400;
+    transition: all 0.2s;
+    line-height: 1.5;
+  }
+  .item-note {
+    font-size: 0.75rem;
+    color: #e67e22;
+    margin-top: 3px;
+    font-weight: 300;
+  }
+  .item-note.tip { color: #3498db; }
+  .footer {
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 0.75rem;
+    color: #bdc3c7;
+  }
+  .legend {
+    max-width: 700px;
+    margin: 0 auto 20px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    color: #7f8c8d;
+  }
+  .legend span { display: flex; align-items: center; gap: 4px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .dot.red { background: #e74c3c; }
+  .dot.green { background: #2ecc71; }
+  .dot.orange { background: #e67e22; }
+  .dot.blue { background: #3498db; }
+  .reset-btn {
+    display: block;
+    max-width: 200px;
+    margin: 0 auto 30px;
+    padding: 10px 20px;
+    background: none;
+    border: 1px solid #bdc3c7;
+    border-radius: 10px;
+    color: #95a5a6;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: #e74c3c; color: #e74c3c; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🌴 괌 여행 체크리스트</h1>
+  <div class="subtitle">4박 5일 가족여행</div>
+  <div class="members">
+    <span class="member-tag dad">🧔 전용하 (아빠)</span>
+    <span class="member-tag mom">👩 김재희 (엄마)</span>
+    <span class="member-tag baby">👶 전예나 (5개월)</span>
+  </div>
+  <div class="flight-info">✈ KE0415 · 3/30(월) 10:05 ICN → GUM · 4시간 30분</div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="progress-text" id="progressText"></div>
+<div class="legend">
+  <span><span class="dot green"></span> 준비 완료</span>
+  <span><span class="dot red"></span> 미완료</span>
+  <span><span class="dot orange"></span> 주의</span>
+  <span><span class="dot blue"></span> 팁</span>
+</div>
+<div class="container" id="checklistContainer"></div>
+<button class="reset-btn" onclick="if(confirm('체크 상태를 모두 초기화할까요?')){localStorage.removeItem('guam_v2');location.reload();}">🔄 체크 초기화</button>
+<div class="footer">체크 상태는 자동 저장됩니다<br>즐거운 괌 여행 되세요! 🏖️</div>
+<script>
+var data = [
+  {
+    title: "서류 · 필수",
+    icon: "📄",
+    items: [
+      { text: "전용하 여권", checked: true },
+      { text: "김재희 여권", checked: true },
+      { text: "전예나 여권", checked: true },
+      { text: "여권 사본 (별도 보관 + 휴대폰 사진 저장)", checked: false, note: "분실 대비 꼭 별도 보관" },
+      { text: "ESTA 승인 3개 (종이 출력본 포함)", checked: true },
+      { text: "항공 티켓 예약 확인서", checked: true },
+      { text: "숙소 예약 내역 (호텔 바우처)", checked: true },
+      { text: "렌트카 바우처", checked: true },
+      { text: "전용하 국제면허증", checked: true },
+      { text: "전용하 국내 운전면허증 (신분증)", checked: true },
+      { text: "여행자 보험 가입", checked: false, note: "⚠️ 아기 포함 가족 전원 필수! 괌은 미국이라 병원비 매우 비쌈" },
+      { text: "입국 서류 확인 (세관신고서)", checked: false, note: "기내에서 작성, 펜 챙기기" }
+    ]
+  },
+  {
+    title: "돈 · 결제 · 통신",
+    icon: "💳",
+    items: [
+      { text: "트래블카드 (300만원 충전)", checked: true },
+      { text: "달러 현금 (50만원 어치)", checked: true },
+      { text: "소액 달러 ($1, $5) 팁용 별도 준비", checked: false, note: "괌은 미국 팁 문화, 식당 15~20%" },
+      { text: "신용카드 원화결제(DCC) 차단 설정", checked: false, note: "⚠️ 안 하면 수수료 폭탄" },
+      { text: "eSIM 준비 (또는 유심/로밍)", checked: false, note: "⚠️ 미리 안 하면 괌 도착 후 인터넷 먹통" }
+    ]
+  },
+  {
+    title: "👶 예나 — 수유 · 이유식",
+    icon: "🍼",
+    items: [
+      { text: "일회용 젖병 (이지고)", checked: false },
+      { text: "분유", checked: false },
+      { text: "분유물 (생수)", checked: false },
+      { text: "분유 온도 조절 텀블러", checked: false },
+      { text: "쪽쪽이", checked: false, note: "이착륙 시 기압변화 → 수유 or 쪽쪽이로 귀 통증 방지", tip: true },
+      { text: "예나 유산균", checked: false },
+      { text: "트루밀 (이유식)", checked: false }
+    ]
+  },
+  {
+    title: "👶 예나 — 기저귀 · 위생",
+    icon: "🧷",
+    items: [
+      { text: "기저귀 (넉넉히 5일치 + 여유분)", checked: false },
+      { text: "방수 기저귀 (수영용)", checked: false },
+      { text: "기저귀 패드", checked: false },
+      { text: "천기저귀", checked: false },
+      { text: "물티슈 (대용량 + 휴대용)", checked: false },
+      { text: "소독티슈", checked: false },
+      { text: "건티슈", checked: false },
+      { text: "일회용 위생봉투", checked: false },
+      { text: "손수건 / 가제수건", checked: false }
+    ]
+  },
+  {
+    title: "👶 예나 — 의류 · 수영",
+    icon: "👗",
+    items: [
+      { text: "여벌옷 (얇은 옷 여러 벌)", checked: false },
+      { text: "가디건 (실내 에어컨 대비)", checked: false, note: "괌 실내 냉방 극강, 얇은 긴팔 필수" },
+      { text: "수영복 3벌", checked: false },
+      { text: "수영모자", checked: false },
+      { text: "비치가운", checked: false },
+      { text: "선글라스 (아기용)", checked: false },
+      { text: "햇빛가리개 / 모자", checked: false },
+      { text: "예나 담요", checked: false },
+      { text: "비치타올", checked: false }
+    ]
+  },
+  {
+    title: "👶 예나 — 건강 · 케어",
+    icon: "💊",
+    items: [
+      { text: "예나 비상약 (해열제, 연고 등)", checked: false, note: "⚠️ 타이레놀시럽 꼭 챙기기" },
+      { text: "체온계", checked: false },
+      { text: "비판텐 (기저귀 발진 연고)", checked: false },
+      { text: "선크림 (아기용 SPF 50+)", checked: false, note: "⚠️ 괌 자외선 매우 강함" },
+      { text: "로션 (아기용)", checked: false },
+      { text: "목욕용품 (아기 바디워시 등)", checked: false }
+    ]
+  },
+  {
+    title: "👶 예나 — 이동 · 놀이 · 기타",
+    icon: "🧸",
+    items: [
+      { text: "휴대용 유모차 (스토케 요요)", checked: true },
+      { text: "아기띠", checked: false, note: "유모차 못 가는 곳에서 필수" },
+      { text: "렌트카 카시트 예약 확인", checked: false, note: "⚠️ 괌은 카시트 법적 의무! 렌트 시 반드시 확인" },
+      { text: "보행기 튜브", checked: false },
+      { text: "오리 튜브 (목욕 겸용)", checked: false },
+      { text: "예나 장난감 (기내용 1~2개)", checked: false, note: "비행 4.5시간 달래줄 장난감" },
+      { text: "베이비 헤드셋 / 이어머프", checked: false, note: "기내 소음 차단용" },
+      { text: "백색소음기", checked: false },
+      { text: "옆잠 베개", checked: false },
+      { text: "소프트 아기의자", checked: false }
+    ]
+  },
+  {
+    title: "🧔 용하 — 개인 준비물",
+    icon: "👔",
+    items: [
+      { text: "속옷", checked: false },
+      { text: "양말", checked: false },
+      { text: "옷 (반팔, 반바지 등)", checked: false },
+      { text: "바지", checked: false },
+      { text: "수영복", checked: false },
+      { text: "면도기", checked: false },
+      { text: "용하 약", checked: false },
+      { text: "비타민", checked: false },
+      { text: "술 (면세점 구매 예정이면 패스)", checked: false }
+    ]
+  },
+  {
+    title: "👩 재희 — 개인 준비물",
+    icon: "👛",
+    items: [
+      { text: "속옷", checked: false },
+      { text: "양말", checked: false },
+      { text: "옷 (반팔, 원피스 등)", checked: false },
+      { text: "바지", checked: false },
+      { text: "수영복", checked: false },
+      { text: "클렌징폼", checked: false },
+      { text: "화장품", checked: false },
+      { text: "헤어 에센스", checked: false },
+      { text: "고데기", checked: false },
+      { text: "머리끈", checked: false },
+      { text: "빗", checked: false },
+      { text: "생리대", checked: false }
+    ]
+  },
+  {
+    title: "공용 — 세면 · 건강",
+    icon: "🧴",
+    items: [
+      { text: "치약 · 칫솔", checked: false },
+      { text: "샴푸 · 린스 (소분)", checked: false },
+      { text: "바디워시 (소분)", checked: false },
+      { text: "로션", checked: false },
+      { text: "선크림 (SPF 50+ 이상)", checked: false, note: "⚠️ 현지에서 SPF 70~100 추가 구매 추천" },
+      { text: "알로에 수딩젤 / 애프터선", checked: false },
+      { text: "면봉", checked: false },
+      { text: "성인 비상약 (소화제, 두통약, 지사제, 밴드)", checked: false },
+      { text: "모기 기피제 / 벌레물림 연고", checked: false },
+      { text: "샤워기 필터", checked: false, note: "괌 수질 걱정되면 챙기기", tip: true }
+    ]
+  },
+  {
+    title: "공용 — 수영 · 비치",
+    icon: "🏖️",
+    items: [
+      { text: "래시가드 / 워터레깅스", checked: false },
+      { text: "아쿠아슈즈", checked: false },
+      { text: "슬리퍼", checked: false },
+      { text: "선글라스", checked: false },
+      { text: "모자 / 캡", checked: false },
+      { text: "돗자리", checked: false },
+      { text: "스노쿨링 장비", checked: false, note: "현지 대여 가능, 개인 장비 선호시 챙기기", tip: true },
+      { text: "튜브 바람 넣는 펌프", checked: false },
+      { text: "쿨링시트", checked: false },
+      { text: "방수팩 (휴대폰용)", checked: false }
+    ]
+  },
+  {
+    title: "전자기기 · 기타 짐",
+    icon: "🔌",
+    items: [
+      { text: "충전기 · 케이블", checked: false },
+      { text: "보조배터리 (기내 수하물)", checked: false },
+      { text: "돼지코 / 멀티탭 확인", checked: false, note: "괌은 110V, 플러그 모양은 한국과 같음. 멀티탭 용도면 챙기기", tip: true },
+      { text: "카메라", checked: false },
+      { text: "휴대용 선풍기", checked: false },
+      { text: "캐리어 2개 (수하물)", checked: true },
+      { text: "백팩 1개 (기내용)", checked: true },
+      { text: "비닐봉지 (빨래 분리용)", checked: false },
+      { text: "비닐 지퍼백 (액체류 기내반입)", checked: false },
+      { text: "우산 / 우비 (스콜 대비)", checked: false, note: "3~4월 건기지만 갑작스런 소나기 가능" },
+      { text: "기내 목베개 / 안대", checked: false },
+      { text: "펜 (세관신고서 작성용)", checked: false }
+    ]
+  }
+];
+
+var container = document.getElementById('checklistContainer');
+var STORAGE_KEY = 'guam_v2';
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { saved = {}; }
+
+function updateProgress() {
+  var items = document.querySelectorAll('.item');
+  var total = items.length, checked = 0;
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].classList.contains('checked')) checked++;
+  }
+  var pct = Math.round((checked / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = checked + ' / ' + total + ' 완료 (' + pct + '%)';
+}
+
+for (var si = 0; si < data.length; si++) {
+  var section = data[si];
+  var div = document.createElement('div');
+  div.className = 'section';
+
+  var itemCount = section.items.length;
+  var allChecked = true;
+  for (var ci = 0; ci < section.items.length; ci++) {
+    var k = si + '-' + ci;
+    var c = saved[k] !== undefined ? saved[k] : section.items[ci].checked;
+    if (!c) { allChecked = false; break; }
+  }
+
+  div.innerHTML =
+    '<div class="section-header">' +
+      '<div class="section-title">' +
+        '<span class="icon">' + section.icon + '</span>' +
+        section.title +
+      '</div>' +
+      '<div class="section-meta">' +
+        '<span class="count-badge">' + itemCount + '개</span>' +
+        '<span class="badge ' + (allChecked ? 'done' : '') + '">' + (allChecked ? '완료' : '미완료') + '</span>' +
+      '</div>' +
+    '</div>';
+
+  for (var ii = 0; ii < section.items.length; ii++) {
+    var item = section.items[ii];
+    var key = si + '-' + ii;
+    var isChecked = saved[key] !== undefined ? saved[key] : item.checked;
+
+    var row = document.createElement('div');
+    row.className = 'item' + (isChecked ? ' checked' : '');
+    row.setAttribute('data-key', key);
+
+    var noteClass = 'item-note';
+    if (item.tip) noteClass += ' tip';
+
+    row.innerHTML =
+      '<div class="checkbox">✓</div>' +
+      '<div class="item-content">' +
+        '<div class="item-text">' + item.text + '</div>' +
+        (item.note ? '<div class="' + noteClass + '">' + item.note + '</div>' : '') +
+      '</div>';
+
+    (function(row, key, div) {
+      row.addEventListener('click', function() {
+        row.classList.toggle('checked');
+        var nowChecked = row.classList.contains('checked');
+        saved[key] = nowChecked;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+        updateProgress();
+        var sectionItems = div.querySelectorAll('.item');
+        var sAll = true;
+        for (var j = 0; j < sectionItems.length; j++) {
+          if (!sectionItems[j].classList.contains('checked')) { sAll = false; break; }
+        }
+        var badge = div.querySelector('.badge');
+        badge.textContent = sAll ? '완료' : '미완료';
+        badge.className = 'badge ' + (sAll ? 'done' : '');
+      });
+    })(row, key, div);
+
+    div.appendChild(row);
+  }
+  container.appendChild(div);
+}
+updateProgress();
+</script>
+</body>
+</html>
